@@ -130,3 +130,6 @@ dmypy.json
 
 #ADDED VENV
 recipevenv/
+
+#TEMPORARY DATA
+data/
