@@ -75,7 +75,7 @@ def scrape_recipes(recipe_urls, page_url):
 
 
 
-for page_nr in range(1, 2):
+for page_nr in range(1, 21 ):
     smulwebpage_html, page_url = get_smulwebpage(page_nr)
-    # extracted_recipes = extract_recipe_urls(smulwebpage_html, page_url)
-    # scrape_recipes(extracted_recipes, page_url)
+    extracted_recipes = extract_recipe_urls(smulwebpage_html, page_url)
+    scrape_recipes(extracted_recipes, page_url)
