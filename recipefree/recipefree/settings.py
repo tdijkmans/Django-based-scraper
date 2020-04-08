@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'recipeDB',
         'USER': "postgres",
         'PASSWORD' : 'CrypTex2000',
-        'HOST': 'localhost', #or for AWS: recipes-rds.cuv9hlk0qaxg.eu-central-1.rds.amazonaws.com
+        'HOST': 'recipes-rds.cuv9hlk0qaxg.eu-central-1.rds.amazonaws.com', #or 'localhost'
         'PORT': '5432',
     }
 }
