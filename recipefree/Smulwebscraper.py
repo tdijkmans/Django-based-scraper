@@ -5,12 +5,12 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import json
+import time
 
 sys.path.append('/recipefree/')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'recipefree.settings'
 django.setup()
 
-import pandas as pd
 from collector.models import SmulWebRecipe, SmulWebPage
 
 
@@ -36,7 +36,7 @@ def extract_recipe_urls(smulwebpage_html, page_url):
     soup = BeautifulSoup(smulwebpage_html, 'html.parser')
     
     urls, recipe_urls = [], []
-    regexp = re.compile(r'https://www.smulweb.nl/recepten/[0-9]')
+    regexp = re.compile(r'https://www.smulweb.nl/recepten/[0-9]') #This regex defines acutal recipe pages, i.e. avoiding urls with recepten/diner etc.
 
     for a in soup.find_all('a', href = True):  # Get URLs from a tags (which include duplicates of  recipes, users
         if a['href'] not in urls:   # to eliminate duplicate URLs
@@ -51,11 +51,9 @@ def extract_recipe_urls(smulwebpage_html, page_url):
 
 
 
-def scrape_recipes(recipe_urls, page_url):
+def scrape_recipes(recipe_urls, page_url, page_nr):
     """
-    This function downloads detailed recipes as listed in a csv file,
-    and saves these as individual files in html format, in a directory corresponding with smulweb web page nr for
-    recipe listing.
+    This function downloads detailed recipes as jsons and saves them in the database with fields recipe_url, recipe_JSON and foreign key page_url
     """
 
     for recipe_url in recipe_urls:
@@ -70,12 +68,19 @@ def scrape_recipes(recipe_urls, page_url):
         s = SmulWebRecipe(recipe_url = recipe_url, recipe_JSON = recipe_json, page_url = p)
         s.save()
         print(f"Saved recipe {recipe_url}")
+        time.sleep(10)
 
 
 
 
+def scrape_smulwebpage(last_page):
+    page_nr = SmulWebPage.objects.latest('page_nr').page_nr + 1
+    while page_nr is not last_page:
+        smulwebpage_html, page_url = get_smulwebpage(page_nr)
+        extracted_recipes = extract_recipe_urls(smulwebpage_html, page_url)
+        scrape_recipes(extracted_recipes, page_url, page_nr)
+        print(f"Scraped page {page_nr}")
+        page_nr +=1
 
-for page_nr in range(1, 21 ):
-    smulwebpage_html, page_url = get_smulwebpage(page_nr)
-    extracted_recipes = extract_recipe_urls(smulwebpage_html, page_url)
-    scrape_recipes(extracted_recipes, page_url)
+
+scrape_smulwebpage(17)
