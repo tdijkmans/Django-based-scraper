@@ -62,14 +62,17 @@ def scrape_recipes(recipe_urls, page_url, page_nr):
         soup = BeautifulSoup(r.text, "html.parser")
         if soup.find("script", {"type":"application/ld+json"}):
             recipe_data =soup.find("script", {"type":"application/ld+json"}).text
-            recipe_json = json.loads(recipe_data)
+            try:
+                recipe_json = json.loads(recipe_data)
 
-            print(f"Scraping recipe {recipe_url} from page {page_nr}")
-            p = SmulWebPage.objects.get(page_url=page_url)
-            s = SmulWebRecipe(recipe_url = recipe_url, recipe_JSON = recipe_json, page_url = p)
-            s.save()
-            print(f"Saved recipe {recipe_url}")
-            time.sleep(10)
+                print(f"Scraping recipe {recipe_url} from page {page_nr}")
+                p = SmulWebPage.objects.get(page_url=page_url)
+                s = SmulWebRecipe(recipe_url = recipe_url, recipe_JSON = recipe_json, page_url = p)
+                s.save()
+                print(f"Saved recipe {recipe_url}")
+                time.sleep(1)
+            except:
+                pass
         else:
             continue
 
@@ -85,4 +88,4 @@ def scrape_smulwebpage(last_page):
         page_nr +=1
 
 
-scrape_smulwebpage(17)
+scrape_smulwebpage(9969)
