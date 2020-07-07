@@ -70,7 +70,7 @@ def scrape_recipes(recipe_urls, page_url, page_nr):
                 s = SmulWebRecipe(recipe_url = recipe_url, recipe_JSON = recipe_json, page_url = p)
                 s.save()
                 print(f"Saved recipe {recipe_url}")
-                time.sleep(1)
+                time.sleep(60)
             except:
                 pass
         else:

@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'recipeDB',
         'USER': "postgres",
-        'PASSWORD' : 'CrypTex2000',
+        'PASSWORD' : 'XXXX',
         'HOST': 'recipes-rds.cuv9hlk0qaxg.eu-central-1.rds.amazonaws.com', #or 'localhost'
         'PORT': '5432',
     }
